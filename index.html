@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Aula inicial Frontend</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src='js/main.js'></script>
+</head>
+<body>
+    <h1> Aula inicial FRONTEND - CEFET-MG </h1>
+      
+    <script>
+        axios.get('http://localhost:3005/clientes').then(res => {
+            var tabela = '<table border="1">';
+            console.log(res.data)
+            res.data.forEach(element => {
+                tabela += "<tr>";
+                tabela += `<td>${element.nome}</td>`;
+                tabela += `<td>${element.sobrenome}</td>`;
+                tabela += `<td>${element.email}</td>`;
+                var data = new Date(element.data_cadastro);
+                tabela += `<td>${data}</td>`;
+                tabela += `<td>R$ ${element.salario}</td>`;
+                tabela += "</tr>";
+                console.log(element)
+            });
+            tabela += "</table>";
+            document.write(tabela)
+
+        })
+    </script>
+</body>
+</html>
