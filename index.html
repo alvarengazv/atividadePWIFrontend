@@ -63,7 +63,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script>
-        axios.get('http://localhost:3005/clientes').then(res => {
+        axios.get('http://localhost:3005/clientes_all').then(res => {
             var tabela = '<table class="table">';
             tabela += "<thead>" +
                 "<tr>" +
@@ -85,12 +85,12 @@
                 tabela += `<td>${element.sobrenome}</td>`;
                 tabela += `<td>${element.email}</td>`;
                 var data = new Date(element.data_cadastro);
-                tabela += `<td>${data}</td>`;
+                tabela += `<td>${data.toLocaleDateString()}</td>`;
                 tabela += `<td>R$ ${element.salario}</td>`;
                 tabela += 
                 `<td style='text-align: center'>
-                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-success">Visualizar</button>
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles <example">
+                        <button type="button" class="btn btn-success" onclick="window.location.href='perfil.html?id_cliente=${element.id_cliente}'">Perfil</button>
                         <button type="button" class="btn btn-warning">Alterar</button>
                         <button type="button" class="btn btn-danger">Deletar</button>
                     </div>
