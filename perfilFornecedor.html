@@ -22,21 +22,6 @@
 
 <body>
     <span id="perfil">
-        <!-- CONTEÚDO -->
-        <!-- <div class="card mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-                <div class="col-md-4">
-                <img src="http://localhost:3005/clientes/C1091.jpeg" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Nome do Cliente</h5>
-                    <p class="card-text">Informações do Cliente</p>
-                    <p class="card-text"><small class="text-body-secondary">Data de cadastro</small></p>
-                </div>
-                </div>
-            </div>
-        </div> -->
     </span>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -46,19 +31,20 @@
     <script>
         var url_string = window.location.href;
         var url = new URL(url_string);
-        var id_cliente = +url.searchParams.get("id_cliente");
-        axios.get(`http://localhost:3005/clientes_byId/${+id_cliente}`).then(res => {
+        var id_fornecedor = +url.searchParams.get("id_fornecedor");
+        axios.get(`http://localhost:3005/fornecedores_byId/${+id_fornecedor}`).then(res => {
+            console.log(res);
             var perfil = `<div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-4">
-                    <img src="http://localhost:3005/clientes/C${res.data.id_cliente}.jpeg" class="img-fluid rounded-start" alt="...">
+                    <img src="http://localhost:3005/fornecedores/F${res.data.id_fornecedor}.jpeg" class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">${res.data.nome} ${res.data.sobrenome}</h5>
-                        <p class="card-text">E-mail: ${res.data.email}</p>
-                        <p class="card-text">Salário: R$ ${res.data.salario}</p>
-                        <p class="card-text"><small class="text-body-secondary">Data de cadastro: ${res.data.data_cadastro}</small></p>
+                        <h5 class="card-title">${res.data.razao} - ${res.data.cpf_cnpj}</h5>
+                        <p class="card-text">Contato: ${res.data.contato}</p>
+                        <p class="card-text">Logradouro: ${res.data.logradouro}</p>
+                        <p class="card-text">${res.data.cidade} - ${res.data.uf}</p>
                     </div>
                     </div>
                 </div>

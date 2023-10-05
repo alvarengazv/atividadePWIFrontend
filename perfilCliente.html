@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href='css/main.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <script src='js/main.js'></script> -->
+    <title>Perfil</title>
+</head>
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+</style>
+
+<body>
+    <span id="perfil">
+    </span>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script>
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var id_cliente = +url.searchParams.get("id_cliente");
+        axios.get(`http://localhost:3005/clientes_byId/${+id_cliente}`).then(res => {
+            var perfil = `<div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                    <img src="http://localhost:3005/clientes/C${res.data.id_cliente}.jpeg" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">${res.data.nome} ${res.data.sobrenome}</h5>
+                        <p class="card-text">E-mail: ${res.data.email}</p>
+                        <p class="card-text">Salário: R$ ${res.data.salario}</p>
+                        <p class="card-text"><small class="text-body-secondary">Data de cadastro: ${res.data.data_cadastro}</small></p>
+                    </div>
+                    </div>
+                </div>
+            </div>`;
+            document.getElementById('perfil').innerHTML = perfil;
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href='css/main.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <script src='js/main.js'></script> -->
+    <title>Aula inicial Frontend</title>
+</head>
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+</style>
+
+<body>
+    <h1> Aula inicial FRONTEND - CEFET-MG </h1>
+    <div class="formulario">
+        <h2 style="text-align: center;">Cadastro de fornecedores</h2>
+        <form enctype="multipart/form-data" method="post">
+            <div id="inputs" class="col-auto">
+                <label for="razao" class="form-label">Razão Social</label>
+                <input required type="text" name="razao" class="form-control form-control-sm" id="razao" placeholder="Sua Razão Social...">
+            </div>
+            <div id="inputs" class="col-auto">
+                <label for="cpf_cnpj" class="form-label">CPF/CNPJ</label>
+                <input required type="text" name="cpf_cnpj" class="form-control form-control-sm" id="cpf_cnpj" placeholder="Seu CPF/CNPJ...">
+            </div>
+            <div id="inputs" class="col-auto">
+                <label for="contato" class="form-label">Contato</label>
+                <input required type="contato" name="contato" class="form-control form-control-sm" id="contato" placeholder="Seu contato...">
+            </div>
+            <div id="inputs" class="col-auto">
+                <label for="logradouro" class="form-label">Logradouro</label>
+                <input required type="text" name="logradouro" class="form-control form-control-sm" id="logradouro" placeholder="Seu logradouro...">
+            </div>
+            <div id="inputs" class="col-auto">
+                <label for="cidade" class="form-label">Cidade</label>
+                <input required type="text" name="cidade" class="form-control form-control-sm" id="cidade" placeholder="Sua cidade...">
+            </div>
+            <div id="inputs" class="col-auto">
+                <label for="uf" class="form-label">UF</label>
+                <input maxlength="2" required type="text" name="uf" class="form-control form-control-sm" id="uf" placeholder="Sua UF...">
+            </div>
+            <div id="inputs" class="col-auto">
+                <label for="avatar" class="form-label">Sua imagem de perfilFornecedor...</label>
+                <input id="avatar" class="form-control" name="avatar" type="file" id="avatar">
+            </div> 
+            <div id="botao-enviar" class="col-auto">
+                <button type="button" class="btn btn-primary mb-3" onclick="salvar()">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+    <h2>Lista de fornecedores</h2>
+    <span id="tabela-fornecedores"></span>
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script>
+        function confirmar(idDeleteFornecedor){
+            if(confirm('Deseja realmente apagar?')){
+                axios.post(`http://localhost:3005/fornecedores_del/${idDeleteFornecedor}`
+                ).then(res => {
+                    window.location.href = `fornecedores.html`;
+                    localStorage.setItem('fornecedorApagado', 'true');
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        }
+
+        window.addEventListener('load', () => {
+            if(localStorage.getItem('fornecedorApagado') === 'true'){
+                localStorage.removeItem('fornecedorApagado');
+                alert('Fornecedor apagado com sucesso!');
+            }
+        });
+
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+
+        var id_fornecedore = +url.searchParams.get("id_fornecedor");
+        var updateFornecedor = url.searchParams.get("update");
+        var razao = url.searchParams.get("razao");
+        var cpf_cnpj = url.searchParams.get("cpf_cnpj");
+        var contato = url.searchParams.get("contato");
+        var logradouro = url.searchParams.get("logradouro");
+        var cidade = url.searchParams.get("cidade");
+        var uf = url.searchParams.get("uf");
+
+        document.getElementById("razao").value = razao;
+        document.getElementById("cpf_cnpj").value = cpf_cnpj;
+        document.getElementById("contato").value = contato;
+        document.getElementById("logradouro").value = logradouro;
+        document.getElementById("cidade").value = cidade;
+        document.getElementById("uf").value = uf;
+
+        function salvar(){
+            if(updateFornecedor === 'ok'){
+                var id_fornecedor = url.searchParams.get("id_fornecedor");
+                var razao = document.getElementById("razao").value;
+                var cpf_cnpj = document.getElementById("cpf_cnpj").value;
+                var contato = document.getElementById("contato").value;
+                var logradouro = document.getElementById("logradouro").value;
+                var cidade = document.getElementById("cidade").value;
+                var uf = document.getElementById("uf").value;
+                const avatar = document.querySelector('input[type="file"]');
+                
+                var formData = new FormData();
+
+                formData.append('razao', razao.trim());
+                formData.append('cpf_cnpj', cpf_cnpj.trim());
+                formData.append('contato', contato.trim());
+                formData.append('logradouro', logradouro.trim());
+                formData.append('cidade', cidade.trim());
+                formData.append('uf', uf.trim());
+                if(avatar.files.length > 0)
+                    formData.append('avatar', avatar.files[0]);
+
+                axios.patch(`http://localhost:3005/fornecedores/` + id_fornecedor, formData, 
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+                ).then(res => {
+                    window.location.href = `perfilFornecedor.html?id_fornecedor=${id_fornecedor}`;
+                    alert('Fornecedor alterado com sucesso!')
+                }).catch(err => {
+                    console.log(err)
+                })
+
+            } else {
+                var razao = document.getElementById("razao").value;
+                var cpf_cnpj = document.getElementById("cpf_cnpj").value;
+                var contato = document.getElementById("contato").value;
+                var logradouro = document.getElementById("logradouro").value;
+                var cidade = document.getElementById("cidade").value;
+                var uf = document.getElementById("uf").value;
+                const avatar = document.querySelector('input[type="file"]');
+                
+                var formData = new FormData();
+
+                formData.append('razao', razao.trim());
+                formData.append('cpf_cnpj', cpf_cnpj.trim());
+                formData.append('contato', contato.trim());
+                formData.append('logradouro', logradouro.trim());
+                formData.append('cidade', cidade.trim());
+                formData.append('uf', uf.trim());
+                if(avatar.files.length > 0)
+                    formData.append('avatar', avatar.files[0]);
+
+                axios.post('http://localhost:3005/fornecedores', formData, 
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+                ).then(res => {
+                    window.location.href = `perfilFornecedor.html?id_fornecedor=${res.data.insertId}`;
+                    alert('Fornecedor criado com sucesso!')
+                }).catch(err => {
+                    console.log(err)
+                })
+            }      
+        }
+
+        axios.get('http://localhost:3005/fornecedores_all').then(res => {
+            var tabela = '<table class="table">';
+            tabela += "<thead>" +
+                "<tr>" +
+                "<th style='text-align: center' scope='col'>ID</th>" +
+                "<th scope='col'>Razão</th>" +
+                "<th scope='col'>CPF/CNPJ</th>" +
+                "<th scope='col'>Contato</th>" +
+                "<th scope='col'>Logradouro</th>" +
+                "<th scope='col'>Cidade</th>" +
+                "<th scope='col'>UF</th>" +
+                "<th style='text-align: center' scope='col'>Ação</th>" +
+                "</tr>" +
+                "</thead>" +
+                "<tbody class='table-group-divider'>";
+            var i = 0;
+            res.data.forEach(element => {
+                tabela += "<tr>";
+                tabela += `<th style='text-align: center' scope="row">${element.id_fornecedor}</th>`;
+                tabela += `<td>${element.razao}</td>`;
+                tabela += `<td>${element.cpf_cnpj}</td>`;
+                tabela += `<td>${element.contato}</td>`;
+                tabela += `<td>${element.logradouro}</td>`;
+                tabela += `<td>${element.cidade}</td>`;
+                tabela += `<td>${element.uf}</td>`;
+                tabela += 
+                `<td style='text-align: center'>
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles <example">
+                        <button type="button" class="btn btn-success" onclick="window.location.href='perfilFornecedor.html?id_fornecedor=${element.id_fornecedor}'">Perfil</button>
+                        <button type="button" class="btn btn-warning"` + 
+                        `onclick="window.location.href='fornecedores.html?` + 
+                        `id_fornecedor=${element.id_fornecedor}` + 
+                        `&razao=${element.razao}` +
+                        `&cpf_cnpj=${element.cpf_cnpj}` +
+                        `&contato=${element.contato}` +
+                        `&logradouro=${element.logradouro}` +
+                        `&cidade=${element.cidade}` +
+                        `&uf=${element.uf}` +
+                        `&update=ok'"` +
+                        `>Alterar</button>
+                        <button type="button" class="btn btn-danger" onclick='confirmar(${element.id_fornecedor})'>Deletar</button>
+                    </div>
+                </td>`;
+                tabela += "</tr>";
+            });
+            tabela += "</tbody>";
+            tabela += "</table>";
+            document.getElementById('tabela-fornecedores').innerHTML = tabela;
+        })
+    </script>
+</body>
+
+</html>x
